@@ -1,3 +1,0 @@
-[submodule "modules/network"]
-	path = modules/network
-	url = https://github.com/andreswebs/terraform-aws-vpc-wrapper.git
