@@ -4,7 +4,7 @@ data "aws_acm_certificate" "this" {
 
 module "network" {
   source     = "andreswebs/vpc/aws"
-  version    = "0.0.3"
+  version    = "0.0.4"
   name       = var.network_name
   cidr_block = var.network_cidr_ipv4
 
