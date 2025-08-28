@@ -2,6 +2,10 @@ data "aws_acm_certificate" "this" {
   domain = var.domain_name
 }
 
+data "aws_route53_zone" "this" {
+  name = "${var.domain_name}."
+}
+
 module "network" {
   source     = "andreswebs/vpc/aws"
   version    = "0.0.4"
@@ -25,4 +29,16 @@ module "web_alb" {
   name                 = var.network_name
   public_subnet_ids    = module.network.public_subnet_ids
   acm_certificate_arns = [data.aws_acm_certificate.this.arn]
+}
+
+resource "aws_route53_record" "argocd" {
+  zone_id = data.aws_route53_zone.this.zone_id
+  name    = "${var.argocd_subdomain}.${var.domain_name}"
+  type    = "A"
+
+  alias {
+    name                   = module.web_alb.lb.dns_name
+    zone_id                = module.web_alb.lb.zone_id
+    evaluate_target_health = true
+  }
 }

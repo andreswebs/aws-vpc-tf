@@ -1,0 +1,27 @@
+resource "aws_iam_role" "external_dns" {
+  name = "external-dns-${var.eks_cluster_name}"
+
+  assume_role_policy    = data.aws_iam_policy_document.pods_trust.json
+  force_detach_policies = true
+  tags                  = var.tags
+}
+
+resource "aws_iam_role_policy" "external_dns" {
+  name   = "external-dns-permissions"
+  role   = aws_iam_role.external_dns.id
+  policy = file("${path.module}/tpl/manage-route53.json")
+}
+
+resource "aws_eks_pod_identity_association" "external_dns_private" {
+  cluster_name    = var.eks_cluster_name
+  role_arn        = aws_iam_role.external_dns.arn
+  namespace       = "external-dns"
+  service_account = "external-dns-private"
+}
+
+resource "aws_eks_pod_identity_association" "external_dns_public" {
+  cluster_name    = var.eks_cluster_name
+  role_arn        = aws_iam_role.external_dns.arn
+  namespace       = "external-dns"
+  service_account = "external-dns-public"
+}

@@ -40,3 +40,8 @@ variable "public_subnet_tags" {
 variable "domain_name" {
   type = string
 }
+
+variable "argocd_subdomain" {
+  type    = string
+  default = "argocd"
+}
