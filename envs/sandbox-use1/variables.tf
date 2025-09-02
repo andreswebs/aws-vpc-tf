@@ -22,16 +22,12 @@ variable "single_nat_gateway" {
   default = false
 }
 
-variable "eks_cluster_name" {
-  type    = string
-  default = null
+variable "private_subnet_tags" {
+  type    = map(string)
+  default = {}
 }
 
-variable "domain_name" {
-  type = string
-}
-
-variable "argocd_subdomain" {
-  type    = string
-  default = "argocd"
+variable "public_subnet_tags" {
+  type    = map(string)
+  default = {}
 }
